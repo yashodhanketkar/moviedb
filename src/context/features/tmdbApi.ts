@@ -12,7 +12,7 @@ export const tmdbApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://api.themoviedb.org/3/",
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem("tmdb-token");
+      const token = process.env.NEXT_PUBLIC_API_KEY;
       headers.set("authorization", `Bearer ${token}`);
       return headers;
     },
