@@ -20,7 +20,7 @@ export const Loading = ({ describedby, description }: LoadingProps) => {
         size={200}
       />
       <button
-        className="px-4 py-2 shadow shadow-white/75 rounded-md mt-4"
+        className="px-4 py-2 shadow-sm shadow-white/75 rounded-md mt-4"
         onClick={() => router.back()}
       >
         Return
@@ -45,7 +45,7 @@ export const ErrorScreen = ({ message }: ErrorProps) => {
         width={`${message.length * 0.75}ch`}
       />
       <button
-        className="px-4 py-2 shadow shadow-white/75 rounded-md mt-4"
+        className="px-4 py-2 shadow-sm shadow-white/75 rounded-md mt-4"
         onClick={() => router.back()}
       >
         Return

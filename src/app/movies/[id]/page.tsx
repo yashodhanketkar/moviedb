@@ -3,9 +3,10 @@ import { MovieDetails } from "@/components/movies";
 import type { ParamProps } from "@/types";
 
 const MovieDetailsPage = async ({ params }: ParamProps) => {
-  const id = decodeParam(params.id);
+  const { id } = await params;
+  if (!id) return;
 
-  return <MovieDetails id={id} />;
+  return <MovieDetails id={decodeParam(id)} />;
 };
 
 export default MovieDetailsPage;

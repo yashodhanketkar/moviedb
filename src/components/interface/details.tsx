@@ -1,14 +1,7 @@
 import { ImagePrefix } from "@/common/constants";
 import type { MovieDetailsResponse, TvDetailsResponse } from "@/types";
-import { Nunito_Sans } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { CircleLoader } from "react-spinners";
-
-const nunitoSans = Nunito_Sans({
-  weight: "700",
-  subsets: ["latin"],
-});
 
 type DetailViewProps = {
   data: MovieDetailsResponse | TvDetailsResponse;
@@ -36,7 +29,7 @@ export const DetailView = ({ data }: DetailViewProps) => {
   return (
     <>
       <div className="flex flex-wrap md:px-32 flex-col md:flex-row gap-1 md:gap-4 px-4 pt-4 md:items-center">
-        <span className={`text-2xl ${nunitoSans.className}`}>{title}</span>
+        <span className={`text-2xl`}>{title}</span>
         {release_date && <span>({new Date(release_date).getFullYear()})</span>}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-4 py-4 px-4 md:px-32 gap-4">
@@ -63,7 +56,7 @@ export const DetailView = ({ data }: DetailViewProps) => {
           <p>{data.tagline}</p>
           <p className="inline-flex gap-2 flex-wrap py-2">
             {data.genres.map((g) => (
-              <span key={g.id} className="shadow shadow-white/30 px-2 rounded">
+              <span key={g.id} className="shadow-sm shadow-white/30 px-2 rounded-sm">
                 {g.name}
               </span>
             ))}
@@ -78,7 +71,7 @@ export const DetailView = ({ data }: DetailViewProps) => {
             {data.production_countries.map((c) => (
               <span
                 key={c.iso_3166_1}
-                className="shadow shadow-white/30 px-2 rounded"
+                className="shadow-sm shadow-white/30 px-2 rounded-sm"
               >
                 {c.name}
               </span>
@@ -86,7 +79,7 @@ export const DetailView = ({ data }: DetailViewProps) => {
           </p>
           <p className="inline-flex gap-1 flex-wrap py-2">
             {data.production_companies.map((c) => (
-              <span key={c.id} className="shadow shadow-white/30 px-2 rounded">
+              <span key={c.id} className="shadow-sm shadow-white/30 px-2 rounded-sm">
                 {c.name}
               </span>
             ))}
@@ -94,7 +87,7 @@ export const DetailView = ({ data }: DetailViewProps) => {
           <Link
             href={data.homepage}
             target="_blank"
-            className="bg-white/10 ring-white/50 ring-1 hover:bg-white/50 py-2 px-4 rounded w-fit"
+            className="bg-white/10 ring-white/50 ring-1 hover:bg-white/50 py-2 px-4 rounded-sm w-fit"
           >
             HomePage
           </Link>

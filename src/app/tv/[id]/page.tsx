@@ -3,9 +3,10 @@ import { TVDetails } from "@/components/tv";
 import type { ParamProps } from "@/types";
 
 const TVDetailsPage = async ({ params }: ParamProps) => {
-  const id = decodeParam(params.id);
+  const { id } = await params;
+  if (!id) return;
 
-  return <TVDetails id={id} />;
+  return <TVDetails id={decodeParam(id)} />;
 };
 
 export default TVDetailsPage;

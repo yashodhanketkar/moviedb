@@ -1,4 +1,4 @@
-import { ImagePrefix, QuerySalt } from "@/common/constants";
+import { ImagePrefix } from "@/common/constants";
 import { encodeParam } from "@/common/functions";
 import { MovieType, TVType } from "@/types";
 import Image from "next/image";
@@ -19,7 +19,7 @@ export const Card = (media: MovieType | TVType) => {
 
   return (
     <Link href={link}>
-      <div className="shadow shadow-white/10 hover:shadow-white/20 mx-auto rounded-2xl w-full p-2">
+      <div className="shadow-sm shadow-white/10 hover:shadow-white/20 mx-auto rounded-2xl w-full p-2">
         <p className="text-xl text-white font-bold line-clamp-1">{title}</p>
         {media.adult && (
           <span className="absolute top-2 right-2 text-red-500">R</span>
@@ -33,7 +33,7 @@ export const Card = (media: MovieType | TVType) => {
         />
         <div className="w-full inline-flex">
           <span>{media.original_language.toUpperCase()}</span>
-          <span className="flex-grow text-end inline-flex gap-1 items-center justify-end">
+          <span className="grow text-end inline-flex gap-1 items-center justify-end">
             {media.vote_average.toFixed(1)}
             <span className="text-xs">({media.vote_count})</span>
           </span>
