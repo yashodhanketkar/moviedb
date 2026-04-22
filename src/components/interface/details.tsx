@@ -2,97 +2,139 @@ import { ImagePrefix } from "@/common/constants";
 import type { MovieDetailsResponse, TvDetailsResponse } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { ExternalLink, Star } from "lucide-react";
 
 type DetailViewProps = {
   data: MovieDetailsResponse | TvDetailsResponse;
 };
 
 export const DetailView = ({ data }: DetailViewProps) => {
-  let title: string;
-  let original_title: string;
-  let release_date: string;
+  const isMovie = "title" in data;
+  const title = isMovie ? data.title : data.name;
+  const original_title = isMovie ? data.original_title : data.original_name;
+  const release_date = isMovie ? data.release_date : data.first_air_date;
 
-  if (Object.hasOwn(data, "title")) {
-    const d = data as MovieDetailsResponse;
-    title = d.title;
-    original_title = d.original_title;
-    release_date = d.release_date;
-  } else if (Object.hasOwn(data, "name")) {
-    const d = data as TvDetailsResponse;
-    title = d.name;
-    original_title = d.original_name;
-    release_date = d.first_air_date;
-  } else {
-    return;
-  }
+  if (!title) return null;
 
   return (
-    <>
-      <div className="flex flex-wrap md:px-32 flex-col md:flex-row gap-1 md:gap-4 px-4 pt-4 md:items-center">
-        <span className={`text-2xl`}>{title}</span>
-        {release_date && <span>({new Date(release_date).getFullYear()})</span>}
+    <div className="relative">
+      <div className="fixed inset-0 -z-10 h-screen w-screen">
+        <Image
+          fill
+          src={ImagePrefix + data.backdrop_path}
+          alt="backdrop"
+          className="object-cover opacity-20"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 background-image-gradient-radial" />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 py-4 px-4 md:px-32 gap-4">
-        <div className="w-full col-span-1">
-          <Image
-            src={ImagePrefix + data.poster_path}
-            alt={title}
-            width={300}
-            height={400}
-            className="w-auto h-auto"
-            priority
-          />
-        </div>
-        <div className="flex flex-col gap-2 col-span-3">
-          {original_title !== title && (
-            <p className="italic">{original_title}</p>
-          )}
-          <div className="flex flex-col">
-            <p className="italic">Release Date: {release_date}</p>
-            <p className="inline-flex">
-              {data.vote_average.toFixed(1)} / {data.vote_count}
-            </p>
+
+      <main className="container mx-auto px-4 py-8 md:py-16">
+        <div className="flex flex-col md:flex-row gap-8 lg:gap-12">
+          <div className="w-full md:w-1/3 lg:w-1/4 shrink-0">
+            <div className="relative aspect-[2/3] overflow-hidden rounded-lg border border-border shadow-xl">
+              <Image
+                fill
+                src={ImagePrefix + data.poster_path}
+                alt={title}
+                className="object-cover"
+                priority
+                sizes="25vw"
+              />
+            </div>
           </div>
-          <p>{data.tagline}</p>
-          <p className="inline-flex gap-2 flex-wrap py-2">
-            {data.genres.map((g) => (
-              <span key={g.id} className="shadow-sm shadow-white/30 px-2 rounded-sm">
-                {g.name}
-              </span>
-            ))}
-          </p>
-          <hr className="border-white/30" />
-          <div className="flex flex-col gap-2">
-            <p className="text-lg font-semibold">Overview</p>
-            <p className="max-w-prose">{data.overview}</p>
+
+          <div className="flex-1 space-y-6">
+            <section className="space-y-2">
+              <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
+                {title}
+                {release_date && (
+                  <span className="ml-2 font-light opacity-50">
+                    ({new Date(release_date).getFullYear()})
+                  </span>
+                )}
+              </h1>
+              {original_title !== title && (
+                <p className="text-lg italic opacity-70">{original_title}</p>
+              )}
+            </section>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-1 font-semibold">
+                <Star className="w-4 h-4" />
+                {data.vote_average.toFixed(1)}
+                <span className="text-xs font-normal opacity-50">
+                  ({data.vote_count})
+                </span>
+              </div>
+              <Separator orientation="vertical" className="h-4" />
+              <p className="text-sm">Released: {release_date}</p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {data.genres.map((g) => (
+                <Badge key={g.id} variant="secondary" className="rounded-md">
+                  {g.name}
+                </Badge>
+              ))}
+            </div>
+
+            {data.tagline && (
+              <p className="text-xl italic opacity-80 border-l-2 pl-4">
+                {data.tagline}
+              </p>
+            )}
+
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold">Overview</h2>
+              <p className="leading-relaxed opacity-90 max-w-3xl">
+                {data.overview}
+              </p>
+            </div>
+
+            <Separator />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+              <div className="space-y-1">
+                <p className="font-semibold uppercase text-[10px] tracking-wider opacity-50">
+                  Production
+                </p>
+                <div className="flex flex-wrap gap-x-2">
+                  {data.production_companies.map((c, i) => (
+                    <span key={c.id}>
+                      {c.name}
+                      {i < data.production_companies.length - 1 ? "," : ""}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <p className="font-semibold uppercase text-[10px] tracking-wider opacity-50">
+                  Links
+                </p>
+                <Button
+                  asChild
+                  variant="secondary"
+                  className="h-auto font-normal"
+                >
+                  <Link
+                    href={data.homepage}
+                    target="_blank"
+                    className="flex items-center gap-1"
+                  >
+                    Official Website <ExternalLink className="w-3 h-3" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
           </div>
-          <hr className="border-white/30" />
-          <p className="inline-flex gap-1 flex-wrap py-2">
-            {data.production_countries.map((c) => (
-              <span
-                key={c.iso_3166_1}
-                className="shadow-sm shadow-white/30 px-2 rounded-sm"
-              >
-                {c.name}
-              </span>
-            ))}
-          </p>
-          <p className="inline-flex gap-1 flex-wrap py-2">
-            {data.production_companies.map((c) => (
-              <span key={c.id} className="shadow-sm shadow-white/30 px-2 rounded-sm">
-                {c.name}
-              </span>
-            ))}
-          </p>
-          <Link
-            href={data.homepage}
-            target="_blank"
-            className="bg-white/10 ring-white/50 ring-1 hover:bg-white/50 py-2 px-4 rounded-sm w-fit"
-          >
-            HomePage
-          </Link>
         </div>
-      </div>
-    </>
+      </main>
+    </div>
   );
 };

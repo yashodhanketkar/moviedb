@@ -5,11 +5,9 @@ const currentYear = new Date(Date.now()).getFullYear();
 export const AppFooter = () => {
   return (
     <div className="p-2 grid md:grid-cols-2 w-full bg-neutral-950/50">
-      <div>
-        <a href="https://github.com/yashodhanketkar/moviedb" target="_blank">
-          MovieDB
-        </a>
-      </div>
+      <a href="https://github.com/yashodhanketkar/moviedb" target="_blank">
+        MovieDB
+      </a>
       <div className="text-right flex md:items-end gap-2 flex-col">
         <span className="text-xs">Powered by</span>
         <TMDBLogo />

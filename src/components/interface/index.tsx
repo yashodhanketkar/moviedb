@@ -1,4 +1,4 @@
-export { Card } from "./card";
+export { ContentCard } from "./card";
 export { DetailView } from "./details";
 export { AppFooter } from "./footer";
 export { AppHeader } from "./header";

@@ -3,42 +3,57 @@ import { encodeParam } from "@/common/functions";
 import { MovieType, TVType } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
-export const Card = (media: MovieType | TVType) => {
-  const linkPrefix = media.media_type === "movie" ? "movies/" : "tv/";
+export const ContentCard = (media: MovieType | TVType) => {
+  const isTV = media.media_type === "tv";
+  const linkPrefix = isTV ? "tv/" : "movies/";
+  const title = isTV ? (media as TVType).name : (media as MovieType).title;
 
-  let title: string;
-
-  if (media.media_type === "tv") {
-    title = (media as TVType).name;
-  } else if (media.media_type === "movie") {
-    title = (media as MovieType).title;
-  } else return;
+  if (!title) return null;
 
   const link = linkPrefix + encodeParam(media.id);
 
   return (
-    <Link href={link}>
-      <div className="shadow-sm shadow-white/10 hover:shadow-white/20 mx-auto rounded-2xl w-full p-2">
-        <p className="text-xl text-white font-bold line-clamp-1">{title}</p>
-        {media.adult && (
-          <span className="absolute top-2 right-2 text-red-500">R</span>
-        )}
+    <Link href={link} className="block group">
+      <Card className="relative aspect-[2/3] overflow-hidden border-none transition-transform duration-300 group-hover:scale-[1.02]">
         <Image
-          width={300}
-          height={400}
+          fill
           src={ImagePrefix + media.poster_path}
-          alt={title + "-poster"}
-          className="w-full px-2 py-4 hover:px-0 hover:py-1 transition-all duration-300 ease-in-out"
+          alt={`${title}-poster`}
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-        <div className="w-full inline-flex">
-          <span>{media.original_language.toUpperCase()}</span>
-          <span className="grow text-end inline-flex gap-1 items-center justify-end">
-            {media.vote_average.toFixed(1)}
-            <span className="text-xs">({media.vote_count})</span>
-          </span>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+        {media.adult && (
+          <div className="absolute top-3 right-3">
+            <Badge variant="destructive" className="font-bold">
+              R
+            </Badge>
+          </div>
+        )}
+        <div className="absolute bottom-0 left-0 right-0 p-4 space-y-2">
+          <h3 className="text-lg font-bold text-white leading-tight line-clamp-2">
+            {title}
+          </h3>
+          <div className="flex items-center justify-between text-sm text-gray-300">
+            <Badge
+              variant="secondary"
+              className="bg-white/10 backdrop-blur-md border-none text-white uppercase"
+            >
+              {media.original_language}
+            </Badge>
+            <div className="flex items-center gap-1 font-medium">
+              <span className="text-yellow-400">★</span>
+              {media.vote_average.toFixed(1)}
+              <span className="text-[10px] opacity-70">
+                ({media.vote_count})
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
+      </Card>
     </Link>
   );
 };
