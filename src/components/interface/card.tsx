@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 export const ContentCard = (media: MovieType | TVType) => {
   const isTV = media.media_type === "tv";
   const linkPrefix = isTV ? "tv/" : "movies/";
-  const title = isTV ? (media as TVType).name : (media as MovieType).title;
+  const title = isTV ? media.name : media.title;
 
   if (!title) return null;
 
